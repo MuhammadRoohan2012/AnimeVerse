@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnimeVerse | Collect • Upgrade • Battle</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:#050814;--panel:#0a1123;--panel2:#0d1730;
+  --line:#1a2b50;--text:#edf2ff;--muted:#91a4c9;
+  --purple:#8b5cf6;--blue:#36a9ff;--pink:#f044b8;
+  --gold:#ffbf47;--green:#45e4a2;--red:#ff5475;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 50% -15%,#20205a 0,transparent 45%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+button:disabled{opacity:.4;cursor:not-allowed}
+.topbar{height:76px;display:flex;align-items:center;gap:22px;padding:0 24px;border-bottom:1px solid var(--line);background:#050814ee;position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}
+.logo{display:flex;align-items:center;gap:10px;min-width:245px}
+.logo-mark{font-size:37px;color:var(--purple);text-shadow:0 0 22px var(--purple)}
+.logo h1{font-family:Orbitron,sans-serif;font-size:21px;margin:0;letter-spacing:1px}
+.logo small{display:block;font-size:9px;color:var(--muted);letter-spacing:3px;margin-top:4px}
+.searchbox{flex:1;max-width:440px;display:flex;border:1px solid #394c85;border-radius:12px;background:#070c1c;overflow:hidden}
+.searchbox input{min-width:0;width:100%;background:transparent;border:0;color:white;padding:12px 14px;outline:none}
+.searchbox button{background:transparent;border:0;padding:0 15px;color:#b9a2ff;font-size:21px}
+.topnav{display:flex;gap:7px;margin-left:auto}
+.navbtn{border:0;background:transparent;color:var(--muted);padding:9px 11px;border-radius:9px;font-size:12px}
+.navbtn:hover,.navbtn.active{background:#19173d;color:white}
+.profile-chip{display:flex;align-items:center;gap:9px;border-left:1px solid var(--line);padding-left:18px;font-size:12px;min-width:145px}
+.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#632de3,#00b6e8);font-size:20px;border:2px solid #b39aff}
+.profile-chip small{display:block;color:var(--muted);margin-top:5px}
+.layout{display:grid;grid-template-columns:195px minmax(0,1fr);min-height:calc(100vh - 130px)}
+.sidebar{padding:18px 12px;border-right:1px solid var(--line);background:#060a16}
+.side-link{display:flex;align-items:center;gap:12px;width:100%;padding:13px 12px;border:0;border-radius:9px;background:transparent;color:#afc1e5;text-align:left;margin-bottom:5px;font-size:13px}
+.side-link span{font-size:19px;width:23px;text-align:center}
+.side-link:hover,.side-link.active{background:linear-gradient(90deg,#302078,#111c3a);color:white;box-shadow:inset 3px 0 var(--purple)}
+.side-promo{margin-top:34px;min-height:150px;border:1px solid #42347e;border-radius:12px;padding:15px;background:radial-gradient(circle at 80% 10%,#5731b1,transparent 50%),linear-gradient(145deg,#151035,#090e20)}
+.side-promo strong{display:block;font-family:Orbitron,sans-serif;font-size:12px;color:#d7c5ff;line-height:1.8}
+.side-promo p{font-size:11px;color:var(--muted);line-height:1.6}
+main{padding:20px;min-width:0}
+.hero{min-height:270px;position:relative;overflow:hidden;border:1px solid #473b91;border-radius:18px;background:radial-gradient(ellipse at 78% 45%,#a33c22 0,transparent 28%),radial-gradient(ellipse at 75% 100%,#7023b6 0,transparent 45%),linear-gradient(105deg,#0b0b20,#17113d 50%,#250e2a);display:flex;align-items:center;padding:35px}
+.hero:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:9%;top:8px;border:1px solid #bda3ff50;box-shadow:0 0 0 25px #8b5cf610,0 0 100px #9b4dff45}
+.hero-art{position:absolute;right:7%;top:0;height:100%;width:36%;display:grid;place-items:center;font-size:clamp(100px,15vw,190px);filter:drop-shadow(0 0 25px #ff6d55);transform:rotate(-5deg)}
+.hero-content{position:relative;z-index:1;max-width:490px}
+.eyebrow{font-size:10px;letter-spacing:3px;color:#d4bcff;font-weight:800}
+.hero h2{font-family:Orbitron,sans-serif;font-size:clamp(24px,3vw,39px);line-height:1.3;margin:13px 0}
+.hero h2 em{font-style:normal;color:#bf8aff}
+.hero p{font-size:13px;color:#c4cce9;line-height:1.7;max-width:340px}
+.primary,.secondary{border:0;border-radius:9px;padding:12px 17px;font-weight:700;font-size:12px}
+.primary{background:linear-gradient(110deg,#773cf1,#a345f7);box-shadow:0 0 25px #803eff45;color:white}
+.primary:hover{filter:brightness(1.16);transform:translateY(-1px)}
+.secondary{background:#141d36;border:1px solid #30426c;color:#d9e5ff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:13px;background:linear-gradient(130deg,#0d1730,#090e1e)}
+.stat label{color:var(--muted);font-size:11px}
+.stat strong{display:block;font-size:20px;margin-top:7px}
+.stat .sicon{float:right;font-size:20px}
+.section{margin-top:25px;scroll-margin-top:90px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
+.section-head h2{font-size:16px;margin:0}
+.section-head p{font-size:11px;color:var(--muted);margin:5px 0 0}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.controls input,.controls select{background:#0b1327;border:1px solid #25375b;border-radius:8px;color:white;padding:9px 11px;font-size:12px}
+.controls input{flex:1;min-width:130px}
+.characters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.character{min-width:0;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:linear-gradient(180deg,#111a31,#080d1c);transition:transform .2s,border-color .2s}
+.character:hover{transform:translateY(-4px);border-color:#8766fa}
+.character-art{height:132px;position:relative;display:grid;place-items:center;font-size:75px;overflow:hidden}
+.character-art:after{content:"";position:absolute;inset:50% 0 0;background:linear-gradient(transparent,#090e1d)}
+.character-art .element{position:absolute;right:10px;top:9px;font-size:11px;background:#050814a8;padding:5px 7px;border-radius:7px;z-index:1}
+.character-art .symbol{filter:drop-shadow(0 0 12px #ffffff55);z-index:1}
+.rarity-tag{position:absolute;left:8px;top:8px;font-size:9px;font-weight:800;padding:5px 7px;border-radius:5px;z-index:2;color:white}
+.Common{border-color:#94a3b8}.tag-Common{background:#66758c}
+.Rare{border-color:#36a9ff}.tag-Rare{background:#187bc3}
+.Epic{border-color:#bd70ff}.tag-Epic{background:#7534c8}
+.Legendary{border-color:#ffbf47}.tag-Legendary{background:#a66c08}
+.Mythic{border-color:#ff5475}.tag-Mythic{background:#b52649}
+.character-body{padding:11px}
+.character-body h3{font-size:13px;margin:0 0 5px}
+.muted{color:var(--muted);font-size:10px}
+.stars{color:var(--gold);font-size:12px;letter-spacing:1px;margin:6px 0}
+.power-row{display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-top:1px solid #17213a}
+.power-row span{color:var(--muted)}
+.character-body .primary,.character-body .secondary{width:100%;margin-top:9px;padding:9px 5px;font-size:10px}
+.empty{grid-column:1/-1;text-align:center;padding:35px;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:linear-gradient(145deg,#0c1428,#080d1a);border:1px solid var(--line);border-radius:13px;padding:16px;min-width:0}
+.panel h3{margin:0 0 12px;font-size:14px}
+.rarity-list{display:flex;gap:8px;flex-wrap:wrap}
+.rarity-pill{border:1px solid var(--line);background:#111a30;padding:8px 11px;border-radius:8px;font-size:11px}
+.rarity-pill:hover{border-color:var(--purple)}
+.team-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.team-slot{min-height:105px;border:1px dashed #304269;border-radius:10px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;color:var(--muted);font-size:11px;text-align:center;padding:7px}
+.team-slot .slot-emoji{font-size:29px}
+.team-slot.filled{border-style:solid;border-color:#7959d6;background:#151132;color:white}
+.team-slot button{background:transparent;border:0;color:#ff8399;font-size:10px}
+.team-summary{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:var(--muted);margin:12px 0}
+.battle-box{background:radial-gradient(ellipse at 50% 0,#322064,transparent 70%),#090e1e;border:1px solid #49377c;border-radius:13px;padding:22px;text-align:center}
+.battle-avatars{display:flex;justify-content:center;align-items:center;gap:20px;margin:20px 0}
+.battle-side{width:100px}
+.battle-side .fighter{font-size:52px;display:block}
+.battle-side small{color:var(--muted);font-size:10px}
+.versus{font-family:Orbitron,sans-serif;font-size:20px;color:var(--pink)}
+.battle-log{margin-top:15px;text-align:left;background:#050914;border:1px solid var(--line);border-radius:9px;padding:12px;font-size:12px;line-height:1.8;color:#c7d5f5;min-height:75px}
+.progress{height:7px;background:#1b2844;border-radius:10px;overflow:hidden;margin-top:8px}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#8b5cf6,#36a9ff);width:0%;transition:width .3s}
+.footer{border-top:1px solid var(--line);padding:18px 24px;display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:10px;flex-wrap:wrap}
+.toast{position:fixed;bottom:22px;right:22px;background:#171d39;border:1px solid #7459d6;padding:13px 18px;border-radius:10px;box-shadow:0 8px 30px #0008;z-index:30;font-size:12px;animation:pop .2s ease}
+@keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-backdrop{position:fixed;inset:0;background:#000b;z-index:25;display:none;place-items:center;padding:18px}
+.modal-backdrop.show{display:grid}
+.modal{max-width:420px;width:100%;border:1px solid #5a478f;border-radius:16px;background:#0b1124;padding:22px;box-shadow:0 0 60px #612ecb33}
+.modal-top{display:flex;justify-content:space-between;align-items:center}
+.modal-top h2{font-size:18px}
+.close{border:0;background:#202945;border-radius:7px;padding:7px 10px}
+.detail-emoji{text-align:center;font-size:90px;padding:18px}
+.detail-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}
+.detail-stat{padding:12px 5px;background:#121b32;border-radius:8px;text-align:center;font-size:11px}
+.detail-stat strong{display:block;font-size:17px;margin-bottom:5px}
+.mobile-menu{display:none}
+@media(max-width:1100px){.topbar{gap:12px;padding:0 14px}.logo{min-width:190px}.topnav{gap:0}.navbtn{padding:9px 7px}.layout{grid-template-columns:165px minmax(0,1fr)}.characters{grid-template-columns:repeat(3,minmax(0,1fr))}.profile-chip{min-width:auto}.hero-art{right:3%}}
+@media(max-width:760px){.topbar{height:auto;min-height:65px;flex-wrap:wrap;padding:12px}.logo{min-width:0;flex:1}.logo h1{font-size:17px}.logo-mark{font-size:30px}.topnav{display:none}.profile-chip{border:0;padding-left:0}.profile-chip>div:last-child{display:none}.searchbox{order:3;flex-basis:100%;max-width:none}.layout{display:block}.sidebar{display:none;position:fixed;top:65px;left:0;bottom:0;width:220px;z-index:20;border-right:1px solid var(--line);box-shadow:15px 0 40px #0008}.sidebar.open{display:block}.mobile-menu{display:block;border:1px solid var(--line);background:#11182d;padding:8px 11px;border-radius:8px}.side-promo{display:none}main{padding:13px}.hero{min-height:270px;padding:22px}.hero-art{right:-10%;opacity:.38;width:60%;font-size:150px}.hero-content{max-width:95%}.hero h2{font-size:27px}.stats{gap:7px}.stat{padding:10px}.stat strong{font-size:17px}.characters{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.character-art{height:120px;font-size:66px}.two-col{grid-template-columns:1fr}.section{margin-top:21px}.footer{padding:16px}}
+@media(max-width:380px){.logo h1{font-size:14px}.hero h2{font-size:23px}.stats{grid-template-columns:1fr}.characters{grid-template-columns:1fr 1fr}.character-body{padding:8px}.character-art{height:105px}.team-slots{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.hero {
+  background:
+    linear-gradient(90deg, #08091b 5%, #100b28cc 43%, #100b2820 100%),
+    url("https://aiwallpaperarts.com/static/images/wallpapers/original/3029956.jpg") center 35% / cover no-repeat;
+  border: 1px solid #7548d8;
+  box-shadow: 0 0 30px #7137e522;
+}
+
+.hero:before {
+  display: none;
+}
+
+.hero-art {
+  display: none;
+}
+
+.hero-content {
+  text-shadow: 0 2px 12px #000;
+}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button class="mobile-menu" id="menuButton" aria-label="Open menu">☰</button>
+  <div class="logo">
+    <span class="logo-mark">✥</span>
+    <div><h1>ANIMEVERSE</h1><small>COLLECT • UPGRADE • BATTLE</small></div>
+  </div>
+  <div class="searchbox">
+    <input id="globalSearch" type="search" placeholder="⌕  Search characters..." aria-label="Search characters">
+    <button id="searchButton" aria-label="Search">⌕</button>
+  </div>
+  <nav class="topnav">
+    <button class="navbtn active" data-target="home">⌂ Home</button>
+    <button class="navbtn" data-target="collection">♙ Collection</button>
+    <button class="navbtn" data-target="battle">⚔ Battle</button>
+    <button class="navbtn" data-target="team">♟ Team</button>
+  </nav>
+  <div class="profile-chip">
+    <div class="avatar">⚡</div>
+    <div><strong>AnimeMaster</strong><small id="headerLevel">Lv. 1</small></div>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <button class="side-link active" data-target="home"><span>⌂</span>Home</button>
+  <button class="side-link" data-target="collection"><span>♙</span>Characters</button>
+  <button class="side-link" data-target="battle"><span>⚔</span>Battle Simulator</button>
+  <button class="side-link" data-target="team"><span>♟</span>Team Builder</button>
+  <button class="side-link" data-target="rarities"><span>◈</span>Rarity System</button>
+  <button class="side-link" data-target="profile"><span>◉</span>Player Profile</button>
+  <div class="side-promo"><strong>YOUR ANIME<br>JOURNEY<br>BEGINS HERE</strong><p>Collect heroes. Build your legacy.</p>✦ ✦ ✦</div>
+</aside>
+
+<main>
+<section id="home" class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">✦ YOUR NEXT ADVENTURE STARTS NOW</div>
+    <h2>COLLECT POWERFUL<br><em>ANIME HEROES</em></h2>
+    <p>Build your dream team, upgrade your heroes and prove your strength in the battlefield.</p>
+    <button class="primary" data-target="collection">EXPLORE CHARACTERS →</button>
+  </div>
+  <div class="hero-art" aria-hidden="true">🔥</div>
+</section>
+
+<div class="stats">
+  <div class="stat"><span class="sicon">♙</span><label>Characters Owned</label><strong id="ownedCount">12</strong></div>
+  <div class="stat"><span class="sicon">⚔️</span><label>Battles Won</label><strong id="winsCount">0</strong></div>
+  <div class="stat"><span class="sicon">💎</span><label>Player Level</label><strong id="levelStat">1</strong></div>
+</div>
+
+<section id="collection" class="section">
+  <div class="section-head">
+    <div><h2>✦ Character Collection</h2><p>Discover heroes, check their powers and recruit your favorites.</p></div>
+    <span class="muted" id="resultCount">12 characters</span>
+  </div>
+  <div class="controls">
+    <input id="characterSearch" type="search" placeholder="Search name or element...">
+    <select id="rarityFilter" aria-label="Filter by rarity">
+      <option value="All">All rarities</option><option>Common</option><option>Rare</option><option>Epic</option><option>Legendary</option><option>Mythic</option>
+    </select>
+    <select id="elementFilter" aria-label="Filter by element">
+      <option value="All">All elements</option><option>Fire</option><option>Water</option><option>Wind</option><option>Shadow</option><option>Light</option><option>Earth</option><option>Ice</option><option>Lightning</option><option>Nature</option><option>Poison</option>
+    </select>
+  </div>
+  <div id="charactersGrid" class="characters"></div>
+</section>
+
+<section id="rarities" class="section">
+  <div class="two-col">
+    <div class="panel">
+      <h3>◈ Rarity System</h3>
+      <p class="muted">Choose a rarity to filter the collection.</p>
+      <div class="rarity-list">
+        <button class="rarity-pill" data-rarity="Common">⚪ Common</button>
+        <button class="rarity-pill" data-rarity="Rare">🔵 Rare</button>
+        <button class="rarity-pill" data-rarity="Epic">🟣 Epic</button>
+        <button class="rarity-pill" data-rarity="Legendary">🟡 Legendary</button>
+        <button class="rarity-pill" data-rarity="Mythic">🔴 Mythic</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>⚡ How to become stronger</h3>
+      <p class="muted">Win simulated battles to earn XP and coins. Every level requires more XP than the previous one.</p>
+      <div style="margin-top:15px;display:flex;justify-content:space-between;font-size:12px"><span>Player progress</span><strong id="xpText">0 / 100 XP</strong></div>
+      <div class="progress"><span id="xpBar"></span></div>
+      <p class="muted" id="coinText" style="margin-top:12px">🪙 500 coins • 💎 20 gems</p>
+    </div>
+  </div>
+</section>
+
+<section id="team" class="section">
+  <div class="section-head"><div><h2>♟ My Battle Team</h2><p>Select up to three different heroes from your collection.</p></div><button class="secondary" id="clearTeam">Clear Team</button></div>
+  <div class="panel">
+    <div class="team-slots" id="teamSlots"></div>
+    <div class="team-summary"><span id="teamCount">0 / 3 heroes selected</span><span id="teamPower">Team power: 0</span></div>
+    <button class="primary" data-target="battle">ENTER BATTLE ARENA →</button>
+  </div>
+</section>
+
+<section id="battle" class="section">
+  <div class="section-head"><div><h2>⚔ Battle Simulator</h2><p>Test your team against a randomly generated opponent.</p></div></div>
+  <div class="battle-box">
+    <div class="eyebrow">ARENA • ROUND <span id="roundNumber">1</span></div>
+    <div class="battle-avatars">
+      <div class="battle-side"><span class="fighter" id="yourFighter">🧙</span><strong>You</strong><br><small id="yourPower">Power: 0</small></div>
+      <div class="versus">VS</div>
+      <div class="battle-side"><span class="fighter" id="enemyFighter">👹</span><strong>Opponent</strong><br><small id="enemyPower">Power: ???</small></div>
+    </div>
+    <p class="muted" id="battleHint">Build a team of up to three characters, then start a battle.</p>
+    <button class="primary" id="battleButton">⚔ START BATTLE</button>
+    <div class="battle-log" id="battleLog" aria-live="polite">Welcome to the arena! Your battle results and rewards will appear here.</div>
+  </div>
+</section>
+
+<section id="profile" class="section">
+  <div class="section-head"><div><h2>◉ Player Profile</h2><p>Your progress is saved in this browser.</p></div></div>
+  <div class="panel">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="avatar" style="width:58px;height:58px;font-size:28px">⚡</div>
+      <div style="flex:1"><h3 id="profileName" style="margin:0 0 5px">AnimeMaster</h3><span class="muted" id="profileLevel">Level 1 Adventurer</span></div>
+      <button class="secondary" id="renameButton">Edit Name</button>
+    </div>
+    <div style="margin-top:20px;display:flex;justify-content:space-between;font-size:12px"><span>Experience</span><strong id="profileXp">0 / 100 XP</strong></div>
+    <div class="progress"><span id="profileBar"></span></div>
+    <div class="stats">
+      <div class="stat"><label>Total Wins</label><strong id="profileWins">0</strong></div>
+      <div class="stat"><label>Coins</label><strong id="profileCoins">500</strong></div>
+      <div class="stat"><label>Gems</label><strong id="profileGems">20</strong></div>
+    </div>
+    <button class="secondary" id="resetButton" style="margin-top:15px">Reset Game Progress</button>
+  </div>
+</section>
+</main>
+</div>
+
+<footer class="footer"><strong>ANIMEVERSE</strong><span>COLLECT • UPGRADE • BATTLE</span><span>Fan-made browser game demo • Progress stored locally</span></footer>
+
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalName">
+  <div class="modal">
+    <div class="modal-top"><h2 id="modalName">Character</h2><button class="close" id="closeModal" aria-label="Close">✕</button></div>
+    <div class="detail-emoji" id="modalEmoji">🔥</div>
+    <div class="muted" id="modalDescription"></div>
+    <div class="detail-stats">
+      <div class="detail-stat"><strong id="modalHp">0</strong>HP</div>
+      <div class="detail-stat"><strong id="modalAtk">0</strong>Attack</div>
+      <div class="detail-stat"><strong id="modalDef">0</strong>Defense</div>
+    </div>
+    <p id="modalSkill" style="font-size:12px;color:#d8caff"></p>
+    <button class="primary" id="modalRecruit" style="width:100%">ADD TO TEAM</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const characters = [
+ {id:1,name:"Blaze Shin",rarity:"Legendary",element:"Fire",emoji:"🔥",hp:8500,atk:7200,def:5800,skill:"Inferno Dragon Strike",bg:"linear-gradient(145deg,#7c271c,#ed6c24,#32132c)",desc:"A fearless flame warrior whose blazing attacks overwhelm opponents."},
+ {id:2,name:"Shadow Ronin",rarity:"Epic",element:"Shadow",emoji:"🥷",hp:7200,atk:6800,def:4600,skill:"Phantom Blade",bg:"linear-gradient(145deg,#10162d,#4e298f,#17234b)",desc:"A mysterious swordsman who attacks from the shadows."},
+ {id:3,name:"Storm Kai",rarity:"Mythic",element:"Lightning",emoji:"⚡",hp:10500,atk:9800,def:7500,skill:"Thunder God Awakening",bg:"linear-gradient(145deg,#401d48,#a32d51,#e45c35)",desc:"A legendary fighter wielding devastating thunder energy."},
+ {id:4,name:"Frost Yuki",rarity:"Legendary",element:"Ice",emoji:"❄️",hp:10200,atk:9700,def:6900,skill:"Absolute Zero",bg:"linear-gradient(145deg,#143e68,#7563d9,#101b3d)",desc:"A calm ice master who can freeze an entire battlefield."},
+ {id:5,name:"Aqua Ren",rarity:"Rare",element:"Water",emoji:"🌊",hp:6100,atk:5900,def:4800,skill:"Ocean Spiral",bg:"linear-gradient(145deg,#064b68,#087eac,#102548)",desc:"A water guardian with balanced combat abilities."},
+ {id:6,name:"Venom Akari",rarity:"Epic",element:"Poison",emoji:"☠️",hp:7800,atk:7800,def:5600,skill:"Toxic Eclipse",bg:"linear-gradient(145deg,#263522,#752a92,#21173f)",desc:"A clever assassin whose poisonous strikes weaken enemies."},
+ {id:7,name:"Solar Jin",rarity:"Mythic",element:"Light",emoji:"☀️",hp:11000,atk:10100,def:8200,skill:"Celestial Nova",bg:"linear-gradient(145deg,#81521a,#e5b84c,#8c3379)",desc:"A radiant champion channeling the energy of the sun."},
+ {id:8,name:"Terra Goro",rarity:"Common",element:"Earth",emoji:"🪨",hp:5600,atk:4200,def:6500,skill:"Mountain Crush",bg:"linear-gradient(145deg,#49351e,#947348,#253323)",desc:"A sturdy defender who stands firm against enemy attacks."},
+ {id:9,name:"Gale Sora",rarity:"Rare",element:"Wind",emoji:"🌪️",hp:6500,atk:6300,def:4400,skill:"Cyclone Rush",bg:"linear-gradient(145deg,#164b49,#327eab,#29275a)",desc:"A swift fighter who strikes before enemies can react."},
+ {id:10,name:"Bloom Hana",rarity:"Common",element:"Nature",emoji:"🌸",hp:5900,atk:4500,def:6200,skill:"Petal Shield",bg:"linear-gradient(145deg,#3d244d,#c45b91,#254d42)",desc:"A nature guardian who protects allies with enchanted petals."},
+ {id:11,name:"Void Rei",rarity:"Legendary",element:"Shadow",emoji:"🌑",hp:9100,atk:9200,def:6300,skill:"Void Breaker",bg:"linear-gradient(145deg,#101020,#572c83,#ba346e)",desc:"A powerful void warrior who bends darkness to their will."},
+ {id:12,name:"Astra Mio",rarity:"Epic",element:"Light",emoji:"🌟",hp:7900,atk:7400,def:7200,skill:"Starfall Burst",bg:"linear-gradient(145deg,#173c70,#7868c8,#a14c91)",desc:"A celestial mage whose starlight attacks can change a battle."}
+];
+
+const rarityRank={Common:1,Rare:2,Epic:3,Legendary:4,Mythic:5};
+const $=id=>document.getElementById(id);
+const defaultState={
+ playerName:"AnimeMaster",level:1,xp:0,wins:0,coins:500,gems:20,
+ team:[1,3,4],owned:characters.map(c=>c.id),round:1
+};
+let state;
+try {
+ const saved=JSON.parse(localStorage.getItem("animeverseSave"));
+ state={...defaultState,...(saved&&typeof saved==="object"?saved:{})};
+ if(!Array.isArray(state.team))state.team=[];
+ if(!Array.isArray(state.owned))state.owned=characters.map(c=>c.id);
+ state.team=state.team.filter(id=>characters.some(c=>c.id===id)).slice(0,3);
+ state.owned=state.owned.filter(id=>characters.some(c=>c.id===id));
+ if(!state.owned.length)state.owned=characters.map(c=>c.id);
+} catch { state={...defaultState,team:[...defaultState.team],owned:[...defaultState.owned]}; }
+
+let selectedCharacter=null;
+let battleBusy=false;
+
+function save(){
+ try{localStorage.setItem("animeverseSave",JSON.stringify(state));}
+ catch{toast("Browser storage is unavailable. Progress may not persist.");}
+}
+function toast(message){
+ const old=document.querySelector(".toast");if(old)old.remove();
+ const el=document.createElement("div");el.className="toast";el.textContent=message;
+ document.body.appendChild(el);setTimeout(()=>el.remove(),2600);
+}
+function getChar(id){return characters.find(c=>c.id===id);}
+function teamMembers(){return state.team.map(getChar).filter(Boolean);}
+function teamPower(){return teamMembers().reduce((sum,c)=>sum+c.atk+c.def+Math.floor(c.hp/2),0);}
+function xpNeeded(){return state.level*100;}
+function addXp(amount){
+ state.xp+=amount;
+ while(state.xp>=xpNeeded()){
+   state.xp-=xpNeeded();state.level++;
+   state.coins+=100;
+   toast("LEVEL UP! You reached level "+state.level+" 🎉");
+ }
+}
+function updateUI(){
+ const needed=xpNeeded(),pct=Math.min(100,state.xp/needed*100);
+ $("headerLevel").textContent="Lv. "+state.level;
+ $("ownedCount").textContent=state.owned.length;
+ $("winsCount").textContent=state.wins;
+ $("levelStat").textContent=state.level;
+ $("xpText").textContent=state.xp+" / "+needed+" XP";
+ $("xpBar").style.width=pct+"%";
+ $("coinText").textContent="🪙 "+state.coins+" coins • 💎 "+state.gems+" gems";
+ $("profileName").textContent=state.playerName;
+ $("profileLevel").textContent="Level "+state.level+" Adventurer";
+ $("profileXp").textContent=state.xp+" / "+needed+" XP";
+ $("profileBar").style.width=pct+"%";
+ $("profileWins").textContent=state.wins;
+ $("profileCoins").textContent=state.coins;
+ $("profileGems").textContent=state.gems;
+ renderTeam();
+ save();
+}
+function renderCharacters(){
+ const q=$("characterSearch").value.trim().toLowerCase();
+ const rarity=$("rarityFilter").value,element=$("elementFilter").value;
+ const list=characters.filter(c=>
+   (c.name+" "+c.element+" "+c.skill).toLowerCase().includes(q)&&
+   (rarity==="All"||c.rarity===rarity)&&
+   (element==="All"||c.element===element)
+ ).sort((a,b)=>rarityRank[b.rarity]-rarityRank[a.rarity]);
+ $("resultCount").textContent=list.length+" characters";
+ const grid=$("charactersGrid");grid.replaceChildren();
+ if(!list.length){
+   const empty=document.createElement("div");empty.className="empty";empty.textContent="No characters found. Try a different search or filter.";grid.appendChild(empty);return;
+ }
+ list.forEach(c=>{
+   const card=document.createElement("article");card.className="character";
+   const art=document.createElement("div");art.className="character-art "+c.rarity;art.style.background=c.bg;
+   const tag=document.createElement("span");tag.className="rarity-tag tag-"+c.rarity;tag.textContent=c.rarity;
+   const emoji=document.createElement("span");emoji.className="symbol";emoji.textContent=c.emoji;
+   const element=document.createElement("span");element.className="element";element.textContent=c.element;
+   art.append(tag,emoji,element);
+   const body=document.createElement("div");body.className="character-body";
+   const title=document.createElement("h3");title.textContent=c.name;
+   const subtitle=document.createElement("div");subtitle.className="muted";subtitle.textContent=c.skill;
+   const stars=document.createElement("div");stars.className="stars";stars.textContent="★".repeat(rarityRank[c.rarity])+"☆".repeat(5-rarityRank[c.rarity]);
+   const level=document.createElement("div");level.className="muted";level.textContent="✦ Lv. "+(state.level+rarityRank[c.rarity]*4);
+   body.append(title,subtitle,stars,level);
+   [["HP",c.hp],["ATK",c.atk],["DEF",c.def]].forEach(([label,value])=>{
+     const row=document.createElement("div");row.className="power-row";
+     const l=document.createElement("span");l.textContent=label;
+     const v=document.createElement("strong");v.textContent=value.toLocaleString();
+     row.append(l,v);body.appendChild(row);
+   });
+   const detail=document.createElement("button");detail.className="secondary";detail.textContent="VIEW DETAILS";
+   detail.addEventListener("click",()=>openDetails(c.id));
+   const recruit=document.createElement("button");recruit.className="primary";
+   recruit.textContent=state.team.includes(c.id)?"✓ IN YOUR TEAM":"+ ADD TO TEAM";
+   recruit.disabled=state.team.includes(c.id);
+   recruit.addEventListener("click",()=>addToTeam(c.id));
+   body.append(detail,recruit);card.append(art,body);grid.appendChild(card);
+ });
+}
+function renderTeam(){
+ const slots=$("teamSlots");slots.replaceChildren();
+ for(let i=0;i<3;i++){
+   const c=getChar(state.team[i]);
+   const slot=document.createElement("div");slot.className="team-slot"+(c?" filled":"");
+   if(c){
+     const emoji=document.createElement("span");emoji.className="slot-emoji";emoji.textContent=c.emoji;
+     const name=document.createElement("strong");name.textContent=c.name;
+     const power=document.createElement("span");power.textContent="ATK "+c.atk.toLocaleString();
+     const remove=document.createElement("button");remove.textContent="REMOVE";
+     remove.addEventListener("click",()=>removeFromTeam(c.id));
+     slot.append(emoji,name,power,remove);
+   }else{
+     const plus=document.createElement("span");plus.className="slot-emoji";plus.textContent="＋";
+     const text=document.createElement("span");text.textContent="Empty Slot";
+     const link=document.createElement("button");link.className="secondary";link.textContent="Choose Hero";
+     link.addEventListener("click",()=>goTo("collection"));
+     slot.append(plus,text,link);
+   }
+   slots.appendChild(slot);
+ }
+ $("teamCount").textContent=state.team.length+" / 3 heroes selected";
+ $("teamPower").textContent="Team power: "+teamPower().toLocaleString();
+ $("yourFighter").textContent=teamMembers()[0]?.emoji||"🧙";
+ $("yourPower").textContent="Power: "+teamPower().toLocaleString();
+ $("battleHint").textContent=state.team.length?"Your team is ready. Start a battle to earn rewards!":"Recruit at least one hero to enter the arena.";
+}
+function addToTeam(id){
+ if(state.team.includes(id)){toast("This hero is already in your team.");return;}
+ if(state.team.length>=3){toast("Your team is full! Remove a hero first.");return;}
+ state.team.push(id);updateUI();renderCharacters();toast(getChar(id).name+" joined your team!");
+}
+function removeFromTeam(id){
+ state.team=state.team.filter(x=>x!==id);updateUI();renderCharacters();toast("Hero removed from team.");
+}
+function openDetails(id){
+ const c=getChar(id);if(!c)return;selectedCharacter=id;
+ $("modalName").textContent=c.name;
+ $("modalEmoji").textContent=c.emoji;
+ $("modalEmoji").style.background=c.bg;
+ $("modalDescription").textContent=c.rarity+" • "+c.element+" • "+c.desc;
+ $("modalHp").textContent=c.hp.toLocaleString();
+ $("modalAtk").textContent=c.atk.toLocaleString();
+ $("modalDef").textContent=c.def.toLocaleString();
+ $("modalSkill").textContent="✦ Special Skill: "+c.skill;
+ $("modalRecruit").textContent=state.team.includes(id)?"✓ ALREADY IN TEAM":"ADD TO TEAM";
+ $("modalRecruit").disabled=state.team.includes(id)||state.team.length>=3;
+ $("modalBackdrop").classList.add("show");
+}
+function closeModal(){$("modalBackdrop").classList.remove("show");}
+function goTo(id){
+ const target=$(id);if(!target)return;
+ target.scrollIntoView({behavior:"smooth",block:"start"});
+ $("sidebar").classList.remove("open");
+ document.querySelectorAll("[data-target]").forEach(b=>b.classList.toggle("active",b.dataset.target===id));
+}
+function battle(){
+ if(battleBusy)return;
+ const team=teamMembers();
+ if(!team.length){toast("Recruit at least one hero first!");goTo("collection");return;}
+ battleBusy=true;$("battleButton").disabled=true;$("battleButton").textContent="BATTLE IN PROGRESS...";
+ const enemy=characters[Math.floor(Math.random()*characters.length)];
+ const playerPower=teamPower();
+ const enemyPower=Math.floor((enemy.atk+enemy.def+enemy.hp/2)*(0.65+Math.random()*0.75));
+ $("enemyFighter").textContent=enemy.emoji;
+ $("enemyPower").textContent="Power: "+Math.round(enemyPower).toLocaleString();
+ $("roundNumber").textContent=state.round++;
+ $("battleLog").textContent="⚔ Your team faces "+enemy.name+"! Calculating battle outcome...";
+ setTimeout(()=>{
+   const score=playerPower*(0.75+Math.random()*0.5);
+   const won=score>=enemyPower;
+   if(won){
+     const xpReward=40+Math.floor(Math.random()*31);
+     const coinReward=50+Math.floor(Math.random()*51);
+     state.wins++;state.coins+=coinReward;addXp(xpReward);
+     $("battleLog").textContent="🏆 VICTORY! Your team defeated "+enemy.name+". Reward: +"+xpReward+" XP and +"+coinReward+" coins. Total victories: "+state.wins+".";
+     toast("Victory! +"+xpReward+" XP");
+   }else{
+     const xpReward=15;
+     addXp(xpReward);state.coins+=10;
+     $("battleLog").textContent="💥 DEFEAT! "+enemy.name+" won this round. Your heroes still earned +15 XP and 10 coins. Upgrade your team and try again!";
+     toast("Battle lost, but you earned XP!");
+   }
+   updateUI();renderCharacters();battleBusy=false;$("battleButton").disabled=false;$("battleButton").textContent="⚔ BATTLE AGAIN";
+ },800);
+}
+$("globalSearch").addEventListener("input",()=>{
+ $("characterSearch").value=$("globalSearch").value;renderCharacters();
+});
+$("searchButton").addEventListener("click",()=>goTo("collection"));
+$("characterSearch").addEventListener("input",renderCharacters);
+$("rarityFilter").addEventListener("change",renderCharacters);
+$("elementFilter").addEventListener("change",renderCharacters);
+document.querySelectorAll("[data-rarity]").forEach(b=>b.addEventListener("click",()=>{
+ $("rarityFilter").value=b.dataset.rarity;renderCharacters();goTo("collection");
+}));
+document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>goTo(b.dataset.target)));
+$("clearTeam").addEventListener("click",()=>{
+ state.team=[];updateUI();renderCharacters();toast("Team cleared.");
+});
+$("battleButton").addEventListener("click",battle);
+$("closeModal").addEventListener("click",closeModal);
+$("modalBackdrop").addEventListener("click",e=>{if(e.target===$("modalBackdrop"))closeModal();});
+$("modalRecruit").addEventListener("click",()=>{
+ if(selectedCharacter!==null)addToTeam(selectedCharacter);
+ closeModal();
+});
+$("menuButton").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+$("renameButton").addEventListener("click",()=>{
+ const name=prompt("Enter your player name:",state.playerName);
+ if(name&&name.trim()){
+   state.playerName=name.trim().slice(0,24);updateUI();toast("Player name updated!");
+ }
+});
+$("resetButton").addEventListener("click",()=>{
+ if(!confirm("Reset your level, XP, coins, wins and team? This cannot be undone."))return;
+ state={...defaultState,team:[...defaultState.team],owned:[...defaultState.owned]};
+ try{localStorage.removeItem("animeverseSave");}catch{}
+ updateUI();renderCharacters();$("battleLog").textContent="Progress reset. Build your team and enter the arena!";
+ toast("Game progress reset.");
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+
+updateUI();
+renderCharacters();
+
+
+</script>
+</body>
+</html>
